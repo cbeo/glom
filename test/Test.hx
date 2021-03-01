@@ -12,6 +12,9 @@ class Pos implements glom.Component {
    var px:Float;
    var py:Float;
 }
+class Job implements glom.Component {
+  var salary:Float = 100.00;
+}
 class Test {
   public static function main () {
     // make an entity - an empty container for different kinds of data
@@ -52,7 +55,13 @@ class Test {
 
     e2.add(new Person("boutade", 0));
 
-    mySelect(e2);
+    mySelect(e2); // EntryNotFound
+
+    e2.add(new Job());
+
+    e2.select(Person, Job)
+      .onOk( r -> trace('${r.person.name} makes ${"$" + r.job.salary} per year'));
+    // boutade makes $100 per year
 
   }
 }
