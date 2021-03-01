@@ -12,6 +12,31 @@ class ComponentBuilder {
   public static function build():Array<Field> {
     var fields = Context.getBuildFields();
 
+    var args = [];
+    var states = [];
+    for (f in fields) {
+      switch (f.kind) {
+      case FVar(t,_):
+        args.push({name:f.name, type:t, opt:false, value:null});
+        states.push(macro $p{["this", f.name]} = $i{f.name});
+        f.access.push(APublic);
+      default:
+      }
+    }
+
+    fields.push({
+      name: "new",
+          access: [APublic],
+          pos: Context.currentPos(),
+          kind: FFun({
+            args: args,
+                expr: macro $b{states},
+                params: [],
+                ret: null
+                })
+          });
+    
+
     var type = Context.toComplexType(Context.getLocalType());
     var resultType = macro : glom.ComponentType.ComponentResult< $type > ;
     var tableType = macro : Array<$type> ;
