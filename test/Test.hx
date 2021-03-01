@@ -2,32 +2,43 @@ package test;
 
 import glom.Entity;
 import haxe.ds.Result;
-
 using glom.EntitySelect;
+
+@:structInit
+class Person implements glom.Component {
+   var name:String;
+   var age:Int;
+}
+
+@:structInit
+class Position implements glom.Component {
+   var px:Float;
+   var py:Float;
+}
 
 class Test {
   public static function main () {
     var e = new Entity();
-    e.set(Comp1, new Comp1("hey",10));
+    var p:Person = {name:"colin", age:9999};
 
-    e.select(Comp1,Comp2)
-      .onOk( (result : {comp1:Comp1,comp2:Comp2}) -> {
-          result.comp1.name = "dude";
-          result.comp2.px = 1000.00;
-        })
-      .onError( err -> trace(err));
+    var mySelect = (e:Entity) -> switch(e.select(Person,Position)) {
+    case Ok({person:{name:name,age:age},position:{px:px,py:py}}): 
+      trace('$name is $age years old and is located at ($px,$py)');
+    case Err(err):
+       trace(err);
+    };
+    
+    e.set(Person, p);
 
-    e.set(Comp2, new Comp2(22.3, 34.0));
+    mySelect(e);
 
-    e.select(Comp1,Comp2)
-      .onOk( (result : {comp1:Comp1,comp2:Comp2}) -> {
-          result.comp1.name = "dude";
-          result.comp2.px = 1000.00;
-        })
-      .onError( err -> trace(err));
+    e.set(Position, new Position(22.3, 34.0));
 
-    trace(e.get( Comp1 ));
-    trace(e.get( Comp2 ));
+    mySelect(e);
 
+    trace(e.get( Person ));
+    trace(e.get( Position ));
+
+    
   }
 }
