@@ -11,7 +11,6 @@ enum ComponentError {
 typedef ComponentResult<Row> = Result<ComponentError,Row>;
 
 typedef ComponentType<Row> = {
-  final __name:String;
   function __get (e:Entity):ComponentResult<Row>;
   function __set (e:Entity, r:Row):ComponentResult<Row>;
 };

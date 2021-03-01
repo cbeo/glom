@@ -17,13 +17,6 @@ class ComponentBuilder {
     var tableType = macro : Array<$type> ;
 
     fields.push({
-      name: "__name",
-          access:[Access.AStatic,Access.AFinal, Access.APublic],
-          kind: FieldType.FVar(macro:String, macro $v{type.toString().split(".").pop().toLowerCase()}),
-          pos: Context.currentPos()
-          });
-
-    fields.push({
           name: "__table",
           access:[Access.AStatic,Access.APublic],
           kind: FieldType.FVar( tableType,

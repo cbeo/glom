@@ -11,17 +11,6 @@ using haxe.macro.MacroStringTools;
 
 class EntitySelect {
 
-  /* 
-     var ret:ReturnType;
-
-     entity.get(Moo)
-       .then(moo -> {ret.moo = moo; return entity.get(Foo)})
-       .then(foo -> {ret.foo = foo; return entity.get(Zoo)})
-       .map(zoo -> {ret.zoo = zoo; return zoo});
-
-   */  
-
-
   public static macro function select(ent:Expr, exprs:Array<Expr>) {
     var pos = Context.currentPos();
 
