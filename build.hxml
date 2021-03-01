@@ -1,0 +1,4 @@
+-cp .
+-lib JustResults
+glom.Entity
+
