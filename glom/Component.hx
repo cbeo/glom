@@ -2,7 +2,6 @@ package glom;
 
 import haxe.macro.Context;
 import haxe.macro.Expr;
-
 using haxe.macro.ComplexTypeTools;
 
 @:remove @:autoBuild(glom.ComponentBuilder.build())
@@ -17,8 +16,8 @@ class ComponentBuilder {
     for (f in fields) {
       switch (f.kind) {
       case FVar(t,_):
-        args.push({name:f.name, type:t, opt:false, value:null});
-        states.push(macro $p{["this", f.name]} = $i{f.name});
+        args.push({name:f.name, type:t, opt:true, value:null});
+        states.push(macro if ($i{f.name} != null) $p{["this", f.name]} = $i{f.name});
         f.access.push(APublic);
       default:
       }
@@ -97,7 +96,6 @@ class ComponentBuilder {
                 }),
           pos: Context.currentPos()
           });
-
 
     return fields;
   }
