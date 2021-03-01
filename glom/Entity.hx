@@ -21,9 +21,9 @@ class Entity {
   static var entries:Array<VersionEntry> = [];
 
   public var index(default, null):Index;
-  var version:Version;
+  public var version(default,null):Version;
 
-  public var alive(get,null):Bool;
+  public var alive(get,never):Bool;
   function get_alive():Bool {
     return switch(Entity.entries[index]) {
     case null: false;

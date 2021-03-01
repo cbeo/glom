@@ -39,5 +39,20 @@ class Test {
       });
 
     mySelect(e); //   colin is 39  and is at 0,0
+
+    e.drop(Person);
+
+    mySelect(e); // EntryNotFound
+
+    e.destroy();
+
+    mySelect(e); // DeadEntity
+
+    var e2 = new Entity();
+
+    e2.add(new Person("boutade", 0));
+
+    mySelect(e2);
+
   }
 }

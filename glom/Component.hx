@@ -39,7 +39,8 @@ class ComponentBuilder {
 
     var type = Context.toComplexType(Context.getLocalType());
     var resultType = macro : glom.ComponentType.ComponentResult< $type > ;
-    var tableType = macro : Array<$type> ;
+    var entryType = macro : {version: Int, row: $type};
+    var tableType = macro : Array<$entryType> ;
 
     fields.push({
           name: "__table",
@@ -56,7 +57,8 @@ class ComponentBuilder {
             expr: macro {
                 if (!e.alive) return Err(DeadEntity(e));
                 var d = __table[e.index];
-                return if (d == null) Err(EntryNotFound(e)) else Ok(d);
+                return if (d == null || e.version != d.version) Err(EntryNotFound(e))
+                  else Ok(d.row);
               },
                 args: [{name: "e", type: macro:glom.Entity}],
                 ret: resultType
@@ -70,7 +72,7 @@ class ComponentBuilder {
           kind: FFun({
             expr: macro {
                 if (!e.alive) return Err(DeadEntity(e));
-                __table[e.index] = val;
+                __table[e.index] = {version: e.version, row: val};
                 return Ok(val);
               },
                 args:[{name: "e", type: macro:glom.Entity},
@@ -88,7 +90,7 @@ class ComponentBuilder {
                 if (!e.alive) return Err(DeadEntity(e));
                 var val = __table[e.index];
                 __table[e.index] = null;
-                return if (val != null) Ok( val ) else Err(EntryNotFound(e));
+                return if (val != null) Ok( val.row ) else Err(EntryNotFound(e));
               },
                 args:[{name: "e", type: macro:glom.Entity}],
                 ret: resultType
