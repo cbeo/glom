@@ -4,41 +4,40 @@ import glom.Entity;
 import haxe.ds.Result;
 using glom.EntitySelect;
 
-@:structInit
 class Person implements glom.Component {
    var name:String;
    var age:Int;
 }
-
-@:structInit
-class Position implements glom.Component {
+class Pos implements glom.Component {
    var px:Float;
    var py:Float;
 }
-
 class Test {
   public static function main () {
+    // make an entity - an empty container for different kinds of data
     var e = new Entity();
-    var p:Person = {name:"colin", age:9999};
 
-    var mySelect = (e:Entity) -> switch(e.select(Person,Position)) {
-    case Ok({person:{name:name,age:age},position:{px:px,py:py}}): 
-      trace('$name is $age years old and is located at ($px,$py)');
-    case Err(err):
-       trace(err);
-    };
-    
-    e.set(Person, p);
+    // here's a function to print info about entities that have both Person and Pos
+    var mySelect = (e:Entity) ->
+      e.select(Person, Pos)
+      .onOk( r -> trace('${r.person.name} is ${r.person.age}  and is at ${r.pos.px},${r.pos.py}'))
+      .onError( e -> trace(e));
 
-    mySelect(e);
+    // give our entity a Person component
+    e.set(new Person("colin", 9999));
 
-    e.set(Position, new Position(22.3, 34.0));
+    mySelect(e); // EntryNotFound error b/c we don't have a Pos
 
-    mySelect(e);
+    e.set(new Pos(22.3, 34.0));
 
-    trace(e.get( Person ));
-    trace(e.get( Position ));
+    mySelect(e); //  colin is 9999  and is at 22.3,34
 
-    
+    e.select(Person,Pos).onOk( result -> {
+        result.person.age = 39;
+        result.pos.px = 0;
+        result.pos.py = 0;
+      });
+
+    mySelect(e); //   colin is 39  and is at 0,0
   }
 }
