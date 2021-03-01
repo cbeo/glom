@@ -1,4 +1,5 @@
 build.hxml
 
 -main test.Test
--neko test.n
+-js test.js
+

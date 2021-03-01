@@ -11,6 +11,12 @@ class Person implements glom.Component {
 class Pos implements glom.Component {
    var px:Float = 0.0;
    var py:Float = 0.0;
+
+  public function moveBy(dx,dy) {
+    px += dx;
+    py += dy;
+  }
+
 }
 class Job implements glom.Component {
   var salary:Float = 100.00;
@@ -38,8 +44,7 @@ class Test {
     e.select(Person,Pos).onOk( result -> {
         result.person.name = "colin";
         result.person.age = 39;
-        result.pos.px = 10;
-        result.pos.py = 10;
+        result.pos.moveBy(20,20);
       });
 
     mySelect(e); //   colin is 39  and is at 10,10

@@ -32,7 +32,6 @@ class EntitySelect {
 
     var blankObType = TAnonymous(blankObTypeFields);
     
-    //var block = [macro var ob : $blankObType];
     var block = [macro var ob = $blankOb];
 
     for (expr in exprs) {

@@ -8,6 +8,7 @@ using haxe.macro.ComplexTypeTools;
 extern interface Component {}
 
 class ComponentBuilder {
+#if macro
   public static function build():Array<Field> {
     var fields = Context.getBuildFields();
 
@@ -99,4 +100,5 @@ class ComponentBuilder {
 
     return fields;
   }
+#end
 }
