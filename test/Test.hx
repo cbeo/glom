@@ -24,11 +24,11 @@ class Test {
       .onError( e -> trace(e));
 
     // give our entity a Person component
-    e.set(new Person("colin", 9999));
+    e.add(new Person("colin", 9999));
 
     mySelect(e); // EntryNotFound error b/c we don't have a Pos
 
-    e.set(new Pos(22.3, 34.0));
+    e.add(new Pos(22.3, 34.0));
 
     mySelect(e); //  colin is 9999  and is at 22.3,34
 

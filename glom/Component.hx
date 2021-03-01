@@ -80,6 +80,23 @@ class ComponentBuilder {
           pos: Context.currentPos()
           });
 
+    fields.push({
+      name: "__drop",
+          access:[Access.AStatic,Access.APublic],
+          kind: FFun({
+            expr: macro {
+                if (!e.alive) return Err(DeadEntity(e));
+                var val = __table[e.index];
+                __table[e.index] = null;
+                return if (val != null) Ok( val ) else Err(EntryNotFound(e));
+              },
+                args:[{name: "e", type: macro:glom.Entity}],
+                ret: resultType
+                }),
+          pos: Context.currentPos()
+          });
+
+
     return fields;
   }
 }

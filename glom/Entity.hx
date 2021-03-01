@@ -54,12 +54,12 @@ class Entity {
     Entity.freed.push(index);
   }
 
-  public function get<Row, Comp:ComponentType<Row>>(comp:Comp):ComponentResult<Row> {
-    return comp.__get(this);
+  public function add<Row:glom.Component>(r:Row):ComponentResult<Row> {
+    return (cast Type.getClass(r)).__set(this, r);
   }
 
-  public function set<Row:glom.Component>(r:Row):ComponentResult<Row> {
-    return (cast Type.getClass(r)).__set(this, r);
+  public function drop<Row, Comp:ComponentType<Row>>(comp:Comp):ComponentResult<Row> {
+    return comp.__drop(this);
   }
 
 }

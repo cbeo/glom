@@ -37,7 +37,7 @@ class EntitySelect {
 
     for (expr in exprs) {
       var field = ident(expr);
-      block.push( macro switch ($ent.get( $expr )) {
+      block.push( macro switch ($expr.__get( $ent )) {
         case Ok(val): ob.$field = val; 
         case Err(err): return Err(err);
         });
