@@ -5,12 +5,12 @@ import haxe.ds.Result;
 using glom.EntitySelect;
 
 class Person implements glom.Component {
-   var name:String;
-   var age:Int;
+   var name:String = "";
+   var age:Int = 0;
 }
 class Pos implements glom.Component {
-   var px:Float;
-   var py:Float;
+   var px:Float = 0.0;
+   var py:Float = 0.0;
 }
 class Job implements glom.Component {
   var salary:Float = 100.00;
@@ -27,21 +27,22 @@ class Test {
       .onError( e -> trace(e));
 
     // give our entity a Person component
-    e.add(new Person("colin", 9999));
+    e.add(new Person());
 
     mySelect(e); // EntryNotFound error b/c we don't have a Pos
 
-    e.add(new Pos(22.3, 34.0));
+    e.add(new Pos());
 
-    mySelect(e); //  colin is 9999  and is at 22.3,34
+    mySelect(e); //  is 0  and is at 0,0
 
     e.select(Person,Pos).onOk( result -> {
+        result.person.name = "colin";
         result.person.age = 39;
-        result.pos.px = 0;
-        result.pos.py = 0;
+        result.pos.px = 10;
+        result.pos.py = 10;
       });
 
-    mySelect(e); //   colin is 39  and is at 0,0
+    mySelect(e); //   colin is 39  and is at 10,10
 
     e.drop(Person);
 
@@ -53,7 +54,7 @@ class Test {
 
     var e2 = new Entity();
 
-    e2.add(new Person("boutade", 0));
+    e2.add(new Person("boutade"));
 
     mySelect(e2); // EntryNotFound
 
