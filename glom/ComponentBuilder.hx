@@ -5,6 +5,9 @@ import haxe.macro.Expr;
 
 using haxe.macro.ComplexTypeTools;
 
+@:remove @:autoBuild(glom.ComponentBuilder.build())
+extern interface IComp {}
+
 class ComponentBuilder {
   public static function build():Array<Field> {
     var fields = Context.getBuildFields();
@@ -58,7 +61,6 @@ class ComponentBuilder {
                 }),
           pos: Context.currentPos()
           });
-
 
     return fields;
   }

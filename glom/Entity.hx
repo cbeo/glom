@@ -1,13 +1,8 @@
 package glom;
 
-
-import haxe.macro.Expr;
-import haxe.macro.Context;
-using haxe.macro.ExprTools;
-using haxe.macro.MacroStringTools;
-
 import haxe.ds.Result;
-import glom.Component.ComponentError;
+import glom.ComponentType.ComponentResult;
+
 
 typedef Index = Int;
 typedef Version = Int;
@@ -21,7 +16,6 @@ class VersionEntry {
     this.version = 0;
   }
 }
-
 
 class Entity {
   static var freed:Array<Index> = [];
@@ -61,13 +55,14 @@ class Entity {
     Entity.freed.push(index);
   }
 
-  public function set<Row, Comp:Component<Row>>(comp:Comp, r:Row):Result<ComponentError,Row> {
+  public function set<Row, Comp:ComponentType<Row>>(comp:Comp, r:Row):ComponentResult<Row> {
     return comp.__set(this, r);
   }
 
-  public function get<Row, Comp:Component<Row>>(comp:Comp):Result<ComponentError,Row> {
+  public function get<Row, Comp:ComponentType<Row>>(comp:Comp):ComponentResult<Row> {
     return comp.__get(this);
   }
-  
+
 }
+
 
