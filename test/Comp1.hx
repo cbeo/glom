@@ -1,6 +1,5 @@
 package test;
 
-//@:build(glom.ComponentBuilder.build())
 class Comp1 implements glom.Component {
   public var name:String;
   public var age:Int;

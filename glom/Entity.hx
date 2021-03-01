@@ -3,7 +3,6 @@ package glom;
 import haxe.ds.Result;
 import glom.ComponentType.ComponentResult;
 
-
 typedef Index = Int;
 typedef Version = Int;
 
