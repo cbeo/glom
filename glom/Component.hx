@@ -4,8 +4,10 @@ import haxe.macro.Context;
 import haxe.macro.Expr;
 using haxe.macro.ComplexTypeTools;
 
-@:remove @:autoBuild(glom.ComponentBuilder.build())
-extern interface Component {}
+@:autoBuild(glom.ComponentBuilder.build())
+interface Component {
+  function __set(e:Entity):Any;
+}
 
 class ComponentBuilder {
 #if macro
@@ -68,16 +70,15 @@ class ComponentBuilder {
 
     fields.push({
       name: "__set",
-          access:[Access.AStatic,Access.APublic],
+          access:[Access.APublic],
           kind: FFun({
             expr: macro {
                 if (!e.alive) return Err(DeadEntity(e));
-                __table[e.index] = {version: e.version, row: val};
-                return Ok(val);
+                __table[e.index] = {version: e.version, row: this};
+                return Ok(this);
               },
-                args:[{name: "e", type: macro:glom.Entity},
-                      {name: "val", type: type}],
-                ret: resultType
+                args:[{name: "e", type: macro:glom.Entity}],
+                ret: macro : Any
                 }),
           pos: Context.currentPos()
           });

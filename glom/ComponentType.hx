@@ -13,7 +13,6 @@ typedef ComponentResult<Row> = Result<ComponentError,Row>;
 typedef ComponentType<Row> = {
   function __drop (e:Entity):ComponentResult<Row>;
   function __get (e:Entity):ComponentResult<Row>;
-  function __set (e:Entity, r:Row):ComponentResult<Row>;
 };
 
 

@@ -1,2 +1,7 @@
 *~
 *.n
+test_cpp/
+test_java/
+test.js
+test.n
+test.hl

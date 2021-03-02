@@ -54,8 +54,8 @@ class Entity {
     Entity.freed.push(index);
   }
 
-  public function add<Row:glom.Component>(r:Row):ComponentResult<Row> {
-    return (cast Type.getClass(r)).__set(this, r);
+  public function add<Row:Component>(r:Row):ComponentResult<Row> {
+    return r.__set(this);
   }
 
   public function drop<Row, Comp:ComponentType<Row>>(comp:Comp):ComponentResult<Row> {
