@@ -5,7 +5,7 @@
     "tags":  [],
     "description": "Macros for an Entity-Component system ",
     "version": "0.0.1",
-    "classPath": "src",
+    "classPath": ".",
     "releasenote": "alpha",
     "contributors": ["Colin Okay"],
     "dependencies": {
