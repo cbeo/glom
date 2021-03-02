@@ -20,16 +20,19 @@ class Entity {
   static var freed:Array<Index> = [];
   static var entries:Array<VersionEntry> = [];
 
+  public static function isAlive(index, version):Bool {
+    return switch(Entity.entries[index]) {
+    case null: false;
+    case entry: entry.alive && entry.version == version;
+    };
+  }
+
   public var index(default, null):Index;
   public var version(default,null):Version;
 
   public var alive(get,never):Bool;
   function get_alive():Bool {
-    return switch(Entity.entries[index]) {
-    case null: false;
-
-    case entry: entry.alive && entry.version == version;
-    };
+    return Entity.isAlive(index, version);
   }
 
   public function new () {
