@@ -47,12 +47,12 @@ class Test {
     mySelect(e); //  is 0  and is at 0,0
 
     e.select(Person,Pos).onOk( result -> {
-        result.person.name = "colin";
-        result.person.age = 39;
+        result.person.name = "goober";
+        result.person.age = 7;
         result.pos.moveBy(20,20);
       });
 
-    mySelect(e); //   colin is 39  and is at 10,10
+    mySelect(e); //   goober is 7  and is at 10,10
 
     e.drop(Person);
 
@@ -84,7 +84,7 @@ Compiling and running the above prints out:
      $ neko main.n
      Main.hx:33: EntryNotFound({ version => 0, index => 0 })
      Main.hx:32:  is 0  and is at 0,0
-     Main.hx:32: colin is 39  and is at 20,20
+     Main.hx:32: goober is 7  and is at 20,20
      Main.hx:33: EntryNotFound({ version => 0, index => 0 })
      Main.hx:33: DeadEntity({ version => 0, index => 0 })
      Main.hx:33: EntryNotFound({ version => 1, index => 0 })
