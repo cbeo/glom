@@ -1,0 +1,14 @@
+{
+    "name": "glom",
+    "url" : "https://github.com/cbeo/glom/",
+    "license": "GPLv3",
+    "tags":  [],
+    "description": "Macros for an Entity-Component system ",
+    "version": "0.0.1",
+    "classPath": "src",
+    "releasenote": "alpha",
+    "contributors": ["Colin Okay"],
+    "dependencies": {
+        "justresults" : "0.0.1"
+    }
+}
