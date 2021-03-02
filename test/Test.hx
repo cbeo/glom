@@ -23,8 +23,25 @@ class Pos implements glom.Component {
 class Job implements glom.Component {
   var salary:Float = 100.00;
 }
+
+class BirthdaySystem extends glom.System<{person:Person}> {
+  override function query(e:Entity) {
+    return e.select(Person);
+  }
+
+  override public function update () {
+    for (row in contents) {
+      row.person.age += 1;
+      trace('${row.person.name} had a birthday! Happy ${row.person.age}!');
+    }
+  }
+}
+
+
 class Test {
   public static function main () {
+    var bdays = new BirthdaySystem();
+
     // make an entity - an empty container for different kinds of data
     var e = new Entity();
 
@@ -37,6 +54,7 @@ class Test {
     // give our entity a Person component
     e.add(new Person());
 
+
     mySelect(e); // EntryNotFound error b/c we don't have a Pos
 
     e.add(new Pos());
@@ -48,6 +66,10 @@ class Test {
         result.person.age = 39;
         result.pos.moveBy(20,20);
       });
+
+    bdays.add(e);
+    bdays.update();
+
 
     mySelect(e); //   colin is 39  and is at 10,10
 

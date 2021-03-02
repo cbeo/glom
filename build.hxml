@@ -1,4 +1,4 @@
 -cp .
--lib JustResults
+-lib justresults
 glom.Entity
 
