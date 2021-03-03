@@ -9,10 +9,15 @@ class System<Row> {
     throw "must override query";
   }
 
-  public function update():Void {
+  function update(r:Row):Void {
     throw "must override update";
   }
 
+  public function run():Void {
+    for (e => row in contents)
+      if (e.alive) update(row);
+  }
+  
   public function add(e:Entity):ComponentResult<Row> {
     return query(e).onOk( row -> contents[e] = row);
   }

@@ -29,11 +29,9 @@ class BirthdaySystem extends glom.System<{person:Person}> {
     return e.select(Person);
   }
 
-  override public function update () {
-    for (row in contents) {
-      row.person.age += 1;
-      trace('${row.person.name} had a birthday! Happy ${row.person.age}!');
-    }
+  override function update (row) {
+    row.person.age += 1;
+    trace('${row.person.name} had a birthday! Happy ${row.person.age}!');
   }
 }
 
@@ -68,16 +66,17 @@ class Test {
       });
 
     bdays.add(e);
-    bdays.update();
-
+    bdays.run();
 
     mySelect(e); //   colin is 39  and is at 10,10
 
-    e.drop(Person);
+    e.drop(Pos);
 
     mySelect(e); // EntryNotFound
 
     e.destroy();
+    trace('running bdays, nothing should happen');
+    bdays.run();
 
     mySelect(e); // DeadEntity
 
