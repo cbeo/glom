@@ -16,7 +16,7 @@ class System<Row> {
 
   function query(e:Entity):ComponentResult<Row> {
     return Err(DeadEntity(e));
-    //throw "must override query";
+    throw "must override query";
   }
 
   function update(r:Row):Void {
@@ -76,8 +76,6 @@ class SystemBuilder {
     for (comp in components)
       registerBlock.push(macro ${comp}.__register( this ));
 
-    var printer = new haxe.macro.Printer();
-    
     fields.push({
       name: "register",
           access:[Access.AOverride],
