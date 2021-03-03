@@ -37,12 +37,13 @@ class ComponentBuilder {
                 ret: null
                 })
           });
-    
 
     var type = Context.toComplexType(Context.getLocalType());
     var resultType = macro : glom.ComponentType.ComponentResult< $type > ;
     var entryType = macro : {version: Int, row: $type};
     var tableType = macro : Array<$entryType> ;
+    var systemType = macro : { function add(e:Entity):Void;  function drop(e:Entity):Void;};
+
 
     fields.push({
           name: "__table",
@@ -51,6 +52,27 @@ class ComponentBuilder {
                                 macro []),
           pos: Context.currentPos()
       });
+
+    fields.push({
+          name: "__systems",
+          access:[Access.AStatic,Access.APublic],
+          kind: FieldType.FVar( macro : Array< $systemType >,
+                                macro []),
+          pos: Context.currentPos()
+      });
+
+    fields.push({
+      name: "__register",
+          access:[Access.AStatic,Access.APublic],
+          kind: FFun({
+            expr: macro {
+                if (!__systems.contains(system)) __systems.push(system);
+              },
+                args: [{name: "system", type: systemType}],
+                ret: macro : Void
+                }),
+          pos: Context.currentPos()
+          });
 
     fields.push({
       name: "__get",
@@ -75,6 +97,7 @@ class ComponentBuilder {
             expr: macro {
                 if (!e.alive) return Err(DeadEntity(e));
                 __table[e.index] = {version: e.version, row: this};
+                for (system in __systems) system.add( e );
                 return Ok(this);
               },
                 args:[{name: "e", type: macro:glom.Entity}],
@@ -91,7 +114,11 @@ class ComponentBuilder {
                 if (!e.alive) return Err(DeadEntity(e));
                 var val = __table[e.index];
                 __table[e.index] = null;
-                return if (val != null) Ok( val.row ) else Err(EntryNotFound(e));
+                if (val != null) {
+                  for (system in __systems) system.drop( e );
+                  return Ok( val.row );
+                }
+                return Err(EntryNotFound(e));
               },
                 args:[{name: "e", type: macro:glom.Entity}],
                 ret: resultType

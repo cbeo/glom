@@ -33,12 +33,67 @@ class BirthdaySystem extends glom.System<{person:Person}> {
     row.person.age += 1;
     trace('${row.person.name} had a birthday! Happy ${row.person.age}!');
   }
+
+  override function register() {
+    Person.__register( this );
+  }
+}
+
+
+class PromotionSystem extends glom.System<{person:Person, job:Job}> {
+  override function query(e:Entity) {
+    return e.select(Person, Job);
+  }
+
+  override function register () {
+    Person.__register(this);
+    Job.__register(this);
+  }
+
+  override function update (row:{person:Person, job:Job}) {
+    var oldSalary = row.job.salary;
+    row.job.salary *= 1.15;
+    trace('${row.person.name} got a raise from $oldSalary to ${row.job.salary}');
+  }
 }
 
 
 class Test {
-  public static function main () {
+
+  public static function main ()  {
+    //test1();
+    test2();
+  }
+
+  public static function test2 () {
     var bdays = new BirthdaySystem();
+    var promos = new PromotionSystem();
+
+    var me = new Entity();
+
+    trace("running birthdays and promos. Nothing should happen.");
+    bdays.run();
+    promos.run();
+
+    me.add(new Person("colin",39));
+    trace("running birthdays and promos. colin shoul dhave a birthday.");
+    bdays.run();
+    promos.run();
+
+    me.add(new Job());
+    trace("running birthdays and promos. colin should have a birthday and get a promotion.");
+    bdays.run();
+    promos.run();
+
+    me.drop(Person);
+    trace("running birthdays and promos. Nothing should happen.");
+    bdays.run();
+    promos.run();
+  }
+
+  public static function test1 () {
+    var bdays = new BirthdaySystem();
+    var promos = new  PromotionSystem();
 
     // make an entity - an empty container for different kinds of data
     var e = new Entity();
@@ -65,7 +120,6 @@ class Test {
         result.pos.moveBy(20,20);
       });
 
-    bdays.add(e);
     bdays.run();
 
     mySelect(e); //   colin is 39  and is at 10,10
@@ -88,9 +142,7 @@ class Test {
 
     e2.add(new Job());
 
-    e2.select(Person, Job)
-      .onOk( r -> trace('${r.person.name} makes ${"$" + r.job.salary} per year'));
-    // boutade makes $100 per year
+    promos.run();
 
   }
 }

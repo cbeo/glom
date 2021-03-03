@@ -5,6 +5,9 @@ class System<Row> {
 
   var contents:Map<Entity,Row> = new Map();
 
+  var toAdd:Array<Entity> = [];
+  var toDrop:Array<Entity> = [];
+
   function query(e:Entity):ComponentResult<Row> {
     throw "must override query";
   }
@@ -13,18 +16,28 @@ class System<Row> {
     throw "must override update";
   }
 
-  public function run():Void {
-    for (e => row in contents)
-      if (e.alive) update(row);
-  }
-  
-  public function add(e:Entity):ComponentResult<Row> {
-    return query(e).onOk( row -> contents[e] = row);
+  function register():Void {
+    throw "must override register";
   }
 
-  public function drop(e:Entity):Bool {
-    return contents.remove(e);
+
+  public function run():Void {
+    for (e in toAdd) query(e).onOk(row -> contents[e] = row);
+    for (e in toDrop) contents.remove(e);
+    for (e => row in contents)
+      if (e.alive) update(row) else drop(e);
   }
   
-  public function new () {}
+  public function add(e:Entity) {
+    toAdd.push(e);
+  }
+
+  public function drop(e:Entity) {
+    toDrop.push(e);
+  }
+  
+  public function new ()
+  {
+    register();
+  }
 }
