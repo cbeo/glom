@@ -1,17 +1,37 @@
 package test;
 
 
+class Job implements glom.Component {
+  var salary:Float = 100.00;
+}
+
+class Person implements glom.Component {
+   var name:String = "";
+   var age:Int = 0;
+}
+
+class Pos implements glom.Component {
+   var px:Float = 0.0;
+   var py:Float = 0.0;
+
+  public function moveBy(dx,dy) {
+    px += dx;
+    py += dy;
+  }
+
+}
+
 class BirthdaySystem extends glom.System<{person:Person}> {
-  override function update (row:{person:Person}) {
+  override function update (row) {
     trace(row);
     row.person.age += 1;
     trace('${row.person.name} had a birthday! Happy ${row.person.age}!');
   }
 }
 
-
-class PromotionSystem extends glom.System<{person:Person, job:Job}> {
-  override function update (row:{person:Person, job:Job}) {
+typedef PromotionRow = {person:Person, job:Job};
+class PromotionSystem extends glom.System<PromotionRow> {
+  override function update (row:PromotionRow) {
     var oldSalary = row.job.salary;
     row.job.salary *= 1.15;
     trace('${row.person.name} got a raise from $oldSalary to ${row.job.salary}');
