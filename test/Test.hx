@@ -49,23 +49,29 @@ class Test {
     var bdays = new BirthdaySystem();
     var promos = new PromotionSystem();
 
-    var me = new Entity();
+    var goober = new Entity();
+    var bloober = new Entity();
 
     trace("running birthdays and promos. Nothing should happen.");
     bdays.run();
     promos.run();
 
-    me.add(new Person("goober",39));
-    trace("running birthdays and promos. goober shoul dhave a birthday.");
+    goober.add(new Person("Goober",100));
+    trace("running birthdays and promos. goober should 11have a birthday.");
     bdays.run();
     promos.run();
 
-    me.add(new Job());
-    trace("running birthdays and promos. goober should have a birthday and get a promotion.");
+    bloober.add(new Person("Bloober", 10));
+    goober.add(new Job());
+
+    trace("running birthdays and promos.");
+    trace("goober should have a birthday and get a promotion.");
+    trace("bloober should have a birthday");
     bdays.run();
     promos.run();
 
-    me.drop(Person);
+    goober.drop(Person);
+    bloober.drop(Person);
     trace("running birthdays and promos. Nothing should happen.");
     bdays.run();
     promos.run();

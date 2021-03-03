@@ -41,28 +41,42 @@ class Main {
 
   public static function main ()  {
 
-    // instantiate some systems
+    // Instantiate systems. Each is registered with its components.
     var bdays = new BirthdaySystem();
     var promos = new PromotionSystem();
 
+    // Make some entities. Empty containers for components.
     var goober = new Entity();
+    var bloober = new Entity();
 
+    // Nothing happens b/c our systems have no components yet.
     trace("running birthdays and promos. Nothing should happen.");
     bdays.run();
     promos.run();
 
-    // whenever a component is added to an entity, relevant systems are updated
-    goober.add(new Person("Goober",99));
-    trace("running birthdays and promos. goober should have a birthday.");
+    // Adding a Person to goober means that the birthday system 
+    // now has something to do.
+    goober.add(new Person("Goober",100));
+    trace("running birthdays and promos. goober should 11have a birthday.");
     bdays.run();
     promos.run();
 
+    // Adding another Person component gives us another birthday. 
+    // Adding a Job to goober means that the PromotionSystem now 
+    // has something to do too.
+    bloober.add(new Person("Bloober", 10));
     goober.add(new Job());
-    trace("running birthdays and promos. goober should have a birthday and get a promotion.");
+
+    trace("running birthdays and promos.");
+    trace("goober should have a birthday and get a promotion.");
+    trace("bloober should have a birthday");
     bdays.run();
     promos.run();
 
+    // Both systems use Person, so dropping person from both entities means that
+    // the systems again have nothing to do.
     goober.drop(Person);
+    bloober.drop(Person);
     trace("running birthdays and promos. Nothing should happen.");
     bdays.run();
     promos.run();
@@ -76,11 +90,15 @@ class Main {
 compiling the above and running with , e.g. neko, would produce:
 
     running birthdays and promos. Nothing should happen.
-    running birthdays and promos. goober shoul dhave a birthday.
-    Goober had a birthday! Happy 100!
-    running birthdays and promos. goober should have a birthday and get a promotion.
+    running birthdays and promos. goober should have a birthday.
     Goober had a birthday! Happy 101!
+    running birthdays and promos.
+    goober should have a birthday and get a promotion.
+    bloober should have a birthday
+    Bloober had a birthday! Happy 11!
+    Goober had a birthday! Happy 102!
     Goober got a raise from 100 to 115
     running birthdays and promos. Nothing should happen.
+
       
 
