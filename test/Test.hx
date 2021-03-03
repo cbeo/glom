@@ -1,55 +1,16 @@
 package test;
 
-import glom.Entity;
-import glom.ComponentType.ComponentError;
-import haxe.ds.Result;
-
-using glom.EntitySelect;
-
-class Person implements glom.Component {
-   var name:String = "";
-   var age:Int = 0;
-}
-class Pos implements glom.Component {
-   var px:Float = 0.0;
-   var py:Float = 0.0;
-
-  public function moveBy(dx,dy) {
-    px += dx;
-    py += dy;
-  }
-
-}
-class Job implements glom.Component {
-  var salary:Float = 100.00;
-}
 
 class BirthdaySystem extends glom.System<{person:Person}> {
-  override function query(e:Entity) {
-    return e.select(Person);
-  }
-
-  override function update (row) {
+  override function update (row:{person:Person}) {
+    trace(row);
     row.person.age += 1;
     trace('${row.person.name} had a birthday! Happy ${row.person.age}!');
-  }
-
-  override function register() {
-    Person.__register( this );
   }
 }
 
 
 class PromotionSystem extends glom.System<{person:Person, job:Job}> {
-  override function query(e:Entity) {
-    return e.select(Person, Job);
-  }
-
-  override function register () {
-    Person.__register(this);
-    Job.__register(this);
-  }
-
   override function update (row:{person:Person, job:Job}) {
     var oldSalary = row.job.salary;
     row.job.salary *= 1.15;

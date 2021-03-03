@@ -2,23 +2,23 @@ build.hxml
 
 -main test.Test
 
---each
+#--each
 
--js test.js
+# -js test.js
 
---next
+# --next
 
 -neko test.n
 
---next
+# --next
 
--hl test.hl
+# -hl test.hl
 
---next
+# --next
 
---java test_java
+# --java test_java
 
---next
+# --next
 
---cpp test_cpp
+# --cpp test_cpp
 
