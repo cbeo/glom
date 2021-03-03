@@ -23,7 +23,6 @@ class Pos implements glom.Component {
 
 class BirthdaySystem extends glom.System<{person:Person}> {
   override function update (row) {
-    trace(row);
     row.person.age += 1;
     trace('${row.person.name} had a birthday! Happy ${row.person.age}!');
   }
@@ -56,13 +55,13 @@ class Test {
     bdays.run();
     promos.run();
 
-    me.add(new Person("colin",39));
-    trace("running birthdays and promos. colin shoul dhave a birthday.");
+    me.add(new Person("goober",39));
+    trace("running birthdays and promos. goober shoul dhave a birthday.");
     bdays.run();
     promos.run();
 
     me.add(new Job());
-    trace("running birthdays and promos. colin should have a birthday and get a promotion.");
+    trace("running birthdays and promos. goober should have a birthday and get a promotion.");
     bdays.run();
     promos.run();
 
@@ -96,14 +95,14 @@ class Test {
     mySelect(e); //  is 0  and is at 0,0
 
     e.select(Person,Pos).onOk( result -> {
-        result.person.name = "colin";
+        result.person.name = "goober";
         result.person.age = 39;
         result.pos.moveBy(20,20);
       });
 
     bdays.run();
 
-    mySelect(e); //   colin is 39  and is at 10,10
+    mySelect(e); //   goober is 39  and is at 10,10
 
     e.drop(Pos);
 

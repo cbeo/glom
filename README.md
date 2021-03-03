@@ -3,90 +3,84 @@
 
 ``` haxe
 
-import glom.Entity;
-import glom.ComponentType.ComponentError;
-import haxe.ds.Result;
+/* Components are just data containers */
 
-using glom.EntitySelect;
+class Job implements glom.Component {
+  var salary:Float = 100.00;
+}
 
 class Person implements glom.Component {
    var name:String = "";
    var age:Int = 0;
 }
-class Pos implements glom.Component {
-   var px:Float = 0.0;
-   var py:Float = 0.0;
 
-  public function moveBy(dx,dy) {
-    px += dx;
-    py += dy;
-  }
 
-}
-class Job implements glom.Component {
-  var salary:Float = 100.00;
-}
-class Test {
-  public static function main () {
-    // make an entity - an empty container for different kinds of data
-    var e = new Entity();
+/* Systems operate on rows which are associated with entities.
+   A system automatically registers with the components in its row type 
+*/
 
-    // here's a function to print info about entities that have both Person and Pos
-    var mySelect = (e:Entity) ->
-      e.select(Person, Pos)
-      .onOk( r -> trace('${r.person.name} is ${r.person.age}  and is at ${r.pos.px},${r.pos.py}'))
-      .onError( e -> trace(e));
-
-    // give our entity a Person component
-    e.add(new Person());
-
-    mySelect(e); // EntryNotFound error b/c we don't have a Pos
-
-    e.add(new Pos());
-
-    mySelect(e); //  is 0  and is at 0,0
-
-    e.select(Person,Pos).onOk( result -> {
-        result.person.name = "goober";
-        result.person.age = 7;
-        result.pos.moveBy(20,20);
-      });
-
-    mySelect(e); //   goober is 7  and is at 10,10
-
-    e.drop(Person);
-
-    mySelect(e); // EntryNotFound
-
-    e.destroy();
-
-    mySelect(e); // DeadEntity
-
-    var e2 = new Entity();
-
-    e2.add(new Person("boutade"));
-
-    mySelect(e2); // EntryNotFound
-
-    e2.add(new Job());
-
-    e2.select(Person, Job)
-      .onOk( r -> trace('${r.person.name} makes ${"$" + r.job.salary} per year'));
-    // boutade makes $100 per year
-
+class BirthdaySystem extends glom.System<{person:Person}> {
+  override function update (row) {
+    row.person.age += 1;
+    trace('${row.person.name} had a birthday! Happy ${row.person.age}!');
   }
 }
+
+
+typedef PromotionRow = {person:Person, job:Job};
+class PromotionSystem extends glom.System<PromotionRow> {
+  override function update (row:PromotionRow) {
+    var oldSalary = row.job.salary;
+    row.job.salary *= 1.15;
+    trace('${row.person.name} got a raise from $oldSalary to ${row.job.salary}');
+  }
+}
+
+
+class Main {
+
+  public static function main ()  {
+
+    // instantiate some systems
+    var bdays = new BirthdaySystem();
+    var promos = new PromotionSystem();
+
+    var goober = new Entity();
+
+    trace("running birthdays and promos. Nothing should happen.");
+    bdays.run();
+    promos.run();
+
+    // whenever a component is added to an entity, relevant systems are updated
+    goober.add(new Person("Goober",99));
+    trace("running birthdays and promos. goober should have a birthday.");
+    bdays.run();
+    promos.run();
+
+    goober.add(new Job());
+    trace("running birthdays and promos. goober should have a birthday and get a promotion.");
+    bdays.run();
+    promos.run();
+
+    goober.drop(Person);
+    trace("running birthdays and promos. Nothing should happen.");
+    bdays.run();
+    promos.run();
+  }
+}
+
 
 ```
 
-Compiling and running the above prints out:
 
-     $ neko main.n
-     Main.hx:33: EntryNotFound({ version => 0, index => 0 })
-     Main.hx:32:  is 0  and is at 0,0
-     Main.hx:32: goober is 7  and is at 20,20
-     Main.hx:33: EntryNotFound({ version => 0, index => 0 })
-     Main.hx:33: DeadEntity({ version => 0, index => 0 })
-     Main.hx:33: EntryNotFound({ version => 1, index => 0 })
-     Main.hx:69: boutade makes $100 per year
+compiling the above and running with , e.g. neko, would produce:
+
+    running birthdays and promos. Nothing should happen.
+    running birthdays and promos. goober shoul dhave a birthday.
+    Goober had a birthday! Happy 100!
+    running birthdays and promos. goober should have a birthday and get a promotion.
+    Goober had a birthday! Happy 101!
+    Goober got a raise from 100 to 115
+    running birthdays and promos. Nothing should happen.
+      
 
