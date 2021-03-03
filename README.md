@@ -57,7 +57,7 @@ class Main {
     // Adding a Person to goober means that the birthday system 
     // now has something to do.
     goober.add(new Person("Goober",100));
-    trace("running birthdays and promos. goober should 11have a birthday.");
+    trace("running birthdays and promos. goober should have a birthday.");
     bdays.run();
     promos.run();
 
