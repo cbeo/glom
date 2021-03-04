@@ -33,7 +33,11 @@ class System<Row> {
     for (e => row in contents)
       if (e.alive) update(row) else drop(e);
   }
-  
+
+  public function iterator():Iterator<Row> {
+    return contents.iterator();
+  }
+
   public function add(e:Entity) {
     toAdd.push(e);
   }

@@ -10,15 +10,25 @@ class Person implements glom.Component {
    var age:Int = 0;
 }
 
-class Pos implements glom.Component {
+class Bongos {
+  var bongos:String;
+  public function new (b) {
+    bongos = b;
+  }
+}
+
+class Pos extends Bongos implements glom.Component {
    var px:Float = 0.0;
    var py:Float = 0.0;
+
+  public function new (b) {
+    super(b);
+  }
 
   public function moveBy(dx,dy) {
     px += dx;
     py += dy;
   }
-
 }
 
 class BirthdaySystem extends glom.System<{person:Person}> {
@@ -96,7 +106,7 @@ class Test {
 
     mySelect(e); // EntryNotFound error b/c we don't have a Pos
 
-    e.add(new Pos());
+    e.add(new Pos("my bongos"));
 
     mySelect(e); //  is 0  and is at 0,0
 

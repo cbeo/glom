@@ -4,6 +4,8 @@ import haxe.macro.Context;
 import haxe.macro.Expr;
 using haxe.macro.ComplexTypeTools;
 
+using Lambda;
+
 @:autoBuild(glom.ComponentBuilder.build())
 interface Component {
   function __set(e:Entity):Any;
@@ -14,8 +16,22 @@ class ComponentBuilder {
   public static function build():Array<Field> {
     var fields = Context.getBuildFields();
 
-    var args = [];
-    var states = [];
+    var constructor = fields.find( f -> f.name == "new");
+
+    fields = fields.filter( f -> f.name != "new");
+
+    var args = switch (constructor) {
+    case null: [];
+    case (_.kind => FFun({args:args,expr:_,params:_,ret:_})): args;
+    default: throw "constructor isn't a function expression";
+    };
+
+    var states = switch (constructor) {
+    case null: [];
+    case (_.kind => FFun({args:_,expr:expr,params:_,ret:_})): [expr];
+    default: throw "constructor isn't a function expression";
+    };
+    
     for (f in fields) {
       switch (f.kind) {
       case FVar(t,_):
