@@ -61,8 +61,8 @@ class System<Row> {
     toDrop.push(e);
   }
 
-  public function onAdd(r:Row):Void {};
-  public function onDrop(r:Row):Void {};
+  function onAdd(r:Row):Void {};
+  function onDrop(r:Row):Void {};
   
   public function new ()
   {
