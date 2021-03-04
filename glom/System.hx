@@ -28,10 +28,25 @@ class System<Row> {
   }
 
   public function run():Void {
-    for (e in toAdd) query(e).onOk(row -> contents[e] = row);
-    for (e in toDrop) contents.remove(e);
+
+    while (toAdd.length > 0) {
+      var e = toAdd.pop();
+      query(e).onOk(row -> {
+          contents[e] = row;
+          onAdd(row);
+        });
+    }
+
+    while (toDrop.length > 0) {
+      var e = toDrop.pop();
+      if (contents.exists(e)) {
+        onDrop( contents[e] );
+        contents.remove(e);
+      }
+    }
+    
     for (e => row in contents)
-      if (e.alive) update(row) else drop(e);
+      if (e.alive) update(row) else drop(e); // maybe this dropping should be immediate
   }
 
   public function iterator():Iterator<Row> {
@@ -45,6 +60,9 @@ class System<Row> {
   public function drop(e:Entity) {
     toDrop.push(e);
   }
+
+  public function onAdd(r:Row):Void {};
+  public function onDrop(r:Row):Void {};
   
   public function new ()
   {
