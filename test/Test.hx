@@ -38,12 +38,22 @@ class BirthdaySystem extends glom.System<{person:Person}> {
   }
 }
 
-typedef PromotionRow = {person:Person, job:Job};
+typedef PromotionRow = {
+ person : Person,
+ job : Job,
+ ?pos : Pos
+};
+
 class PromotionSystem extends glom.System<PromotionRow> {
   override function update (row:PromotionRow) {
     var oldSalary = row.job.salary;
     row.job.salary *= 1.15;
     trace('${row.person.name} got a raise from $oldSalary to ${row.job.salary}');
+    
+    if (row.pos != null)
+      trace('optional pos = ${row.pos}');
+    else
+         trace('no position');
   }
 }
 
@@ -73,6 +83,7 @@ class Test {
 
     bloober.add(new Person("Bloober", 10));
     goober.add(new Job());
+    goober.add(new Pos("moo"));
 
     trace("running birthdays and promos.");
     trace("goober should have a birthday and get a promotion.");
