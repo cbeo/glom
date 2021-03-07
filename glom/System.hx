@@ -9,6 +9,11 @@ using haxe.macro.ComplexTypeTools;
 using haxe.macro.TypeTools;
 #end
 
+typedef SystemType =  {
+  function run():Void;
+}
+
+
 @:autoBuild(glom.System.SystemBuilder.build())
 class System<Row> {
   
