@@ -1,7 +1,7 @@
 {
     "name": "glom",
     "url" : "https://github.com/cbeo/glom/",
-    "license": "GPLv3",
+    "license": "LGPLv3",
     "tags":  [],
     "description": "Macros for an Entity-Component system ",
     "version": "0.0.1",
