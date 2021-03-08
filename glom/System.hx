@@ -22,8 +22,8 @@ class System<Row> {
   var toAdd:Array<Entity> = [];
   var toDrop:Array<Entity> = [];
 
+  // do not need to touch this - the build macro defines it
   function query(e:Entity):ComponentResult<Row> {
-    return Err(DeadEntity(e));
     throw "must override query";
   }
 
@@ -31,40 +31,18 @@ class System<Row> {
     throw "must override update";
   }
 
-  function register():Void {
-    throw "must override register";
-  }
+  // do not need to touch this - the build macro defines it
+  function register():Void {}
 
-
-  function syncEntities () {
-    while (toAdd.length > 0) {
-      var e = toAdd.pop();
-      query(e).onOk(row -> {
-          contents[e] = row;
-          onAdd(row);
-        });
-    }
-
-    while (toDrop.length > 0) {
-      var e = toDrop.pop();
-      if (contents.exists(e)) {
-        onDrop( contents[e] );
-        contents.remove(e);
-      }
-    }
-  }
-
+  // TODO: should this not fail silently?
   public function runOn( e : Entity) {
-    syncEntities();
     if (contents.exists( e ) && e.alive)
       update( contents[e] );
   }
 
   public function run():Void {
-    syncEntities();
-    
     for (e => row in contents)
-      if (e.alive) update(row) else drop(e); // maybe this dropping should be immediate
+      if (e.alive) update(row) else drop(e); 
   }
 
   public function iterator():Iterator<Row> {
@@ -76,11 +54,17 @@ class System<Row> {
   }
 
   public function add(e:Entity) {
-    toAdd.push(e);
+    query(e).onOk(row -> {
+        contents[e] = row;
+        onAdd(row);
+      });
   }
 
   public function drop(e:Entity) {
-    toDrop.push(e);
+    if (contents.exists(e)) {
+      onDrop( contents[e] );
+      contents.remove(e);
+    }
   }
 
   function onAdd(r:Row):Void {};
