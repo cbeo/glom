@@ -35,8 +35,8 @@ class System<Row> {
     throw "must override register";
   }
 
-  public function run():Void {
 
+  function syncEntities () {
     while (toAdd.length > 0) {
       var e = toAdd.pop();
       query(e).onOk(row -> {
@@ -52,6 +52,16 @@ class System<Row> {
         contents.remove(e);
       }
     }
+  }
+
+  public function runOn( e : Entity) {
+    syncEntities();
+    if (contents.exists( e ) && e.alive)
+      update( contents[e] );
+  }
+
+  public function run():Void {
+    syncEntities();
     
     for (e => row in contents)
       if (e.alive) update(row) else drop(e); // maybe this dropping should be immediate
