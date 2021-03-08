@@ -34,12 +34,6 @@ class System<Row> {
   // do not need to touch this - the build macro defines it
   function register():Void {}
 
-  // TODO: should this not fail silently?
-  public function runOn( e : Entity) {
-    if (contents.exists( e ) && e.alive)
-      update( contents[e] );
-  }
-
   public function run():Void {
     for (e => row in contents)
       if (e.alive) update(row) else drop(e); 
