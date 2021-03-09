@@ -102,7 +102,12 @@ compiling the above and running with , e.g. neko, would produce:
     Goober got a raise from 100 to 115
     running birthdays and promos. Nothing should happen.
 
-      
+
+## Dependenies
+
+Glom depends on [JustResults](https://github.com/cbeo/JustResults),
+which provides `Maybe` and a `Result` datatypes and some convenience
+functions for using them.
 
 ## Some Evil Magic in Row Types
 
